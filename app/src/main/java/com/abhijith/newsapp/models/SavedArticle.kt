@@ -1,43 +1,43 @@
-package com.abhijith.newsapp.models;
+package com.abhijith.newsapp.models
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+import androidx.room.*
+import java.sql.Timestamp
 
-import com.abhijith.newsapp.models.Article;
+@Entity(
+    foreignKeys = [
+        ForeignKey(
 
-import java.sql.Timestamp;
+            entity = Article::class,
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = Article.class,
-        parentColumns = "id",
-        childColumns = "news_id"),
-        indices = {@Index(value = "news_id", unique = true)},
-        tableName = "saved"
+            parentColumns = [
+                "id"
+            ],
+
+            childColumns = [
+                "news_id"
+            ]
+
+        )
+    ],
+
+    indices = [
+        Index(
+            value = [
+                "news_id"
+            ],
+            unique = true
+        )
+    ],
+
+    tableName = "saved"
 )
-public class SavedArticle {
+class SavedArticle(
+    newsId: Int
+) {
     @ColumnInfo(name = "news_id")
-    private final int newsId;
+    val newsId: Int = newsId
+
     @PrimaryKey
     @ColumnInfo(name = "time_saved")
-    private Timestamp timestamp;
-
-    public SavedArticle(int newsId) {
-        this.timestamp = new Timestamp(System.currentTimeMillis());
-        this.newsId = newsId;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getNewsId() {
-        return newsId;
-    }
+    var timestamp: Timestamp = Timestamp(System.currentTimeMillis())
 }

@@ -1,13 +1,9 @@
 package com.abhijith.newsapp.models
 
-import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.*
-import com.abhijith.newsapp.models.ArticleSource
 import com.google.gson.annotations.Expose
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import org.jetbrains.annotations.NotNull
 import java.sql.Timestamp
 
 @Entity(

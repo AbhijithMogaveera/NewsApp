@@ -7,31 +7,42 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
-/**
- * An Api interface to send network requests
- * Includes Category enum that provides category names for requests
- */
 interface NewsApi {
+
     @Headers("X-Api-Key:$API_KEY")
     @GET("/v2/top-headlines")
     fun getHeadlines(
-        @Query("category") category: String?,
-        @Query("country") country: String?
-    ): Call<ArticleResponseWrapper?>?
+
+        @Query("category")
+        category: String?,
+
+        @Query("country")
+        country: String?
+
+    ): Call<ArticleResponseWrapper>
 
     @Headers("X-Api-Key:$API_KEY")
     @GET("/v2/top-headlines")
     fun getHeadlinesBySource(
-        @Query("sources") source: String?
+
+        @Query("sources")
+        source: String?
+
     ): Call<ArticleResponseWrapper?>?
 
     @Headers("X-Api-Key:$API_KEY")
     @GET("/v2/sources")
     fun getSources(
-        @Query("category") category: String?,
-        @Query("country") country: String?,
-        @Query("language") language: String?
-    ): Call<SourceResponseWrapper?>?
+        @Query("category")
+        category: String?,
+
+        @Query("country")
+        country: String?,
+
+        @Query("language")
+        language: String?
+
+     ): Call<SourceResponseWrapper>
 
     enum class Category(val title: String) {
         business("Business"),

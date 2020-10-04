@@ -17,6 +17,7 @@ import com.abhijith.newsapp.ui.sources.SourceFragment
 import com.abhijith.newsapp.widget.SavedNewsWidget
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 //import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 import timber.log.Timber.DebugTree

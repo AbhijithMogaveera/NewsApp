@@ -9,11 +9,9 @@ import com.abhijith.newsapp.models.Specification
 
 class SourceViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val newsRepository: NewsRepository =
-        NewsRepository
-            .getInstance(application.applicationContext)!!
+    private val newsRepository: NewsRepository = NewsRepository.getInstance(application.applicationContext)
 
-    fun getSource(specification: Specification?): LiveData<List<Source>> {
+    fun getSource(specification: Specification): LiveData<List<Source>> {
         return newsRepository.getSources(specification)
     }
 

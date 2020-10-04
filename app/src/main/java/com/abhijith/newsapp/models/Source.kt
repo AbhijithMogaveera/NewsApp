@@ -1,76 +1,43 @@
-package com.abhijith.newsapp.models;
+package com.abhijith.newsapp.models
 
-import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 /**
  * Source of news provided
  */
+/**
+ * @param id          of the news source, example **cnn**
+ * @param name        display name of news source, example **CNN**
+ * @param description a description of the news source
+ * @param url         URL of the homepage
+ * @param category    type of news to expect from this news source, example **general**
+ * @param language    language that this news source writes in, example **en**
+ * @param country     country this news source is based in (and primarily writes about), example **au**
+ */
+
 @Entity(tableName = "sources")
-public class Source {
-    @PrimaryKey
-    @NonNull
+data class Source(
+
     @ColumnInfo(name = "id")
-    private final String id;
+    @PrimaryKey val id: String,
     @ColumnInfo(name = "name")
-    private final String name;
+    val name: String,
+
     @ColumnInfo(name = "description")
-    private final String description;
+    val description: String,
+
     @ColumnInfo(name = "url")
-    private final String url;
+    val url: String,
+
     @ColumnInfo(name = "category")
-    private final String category;
+    val category: String,
+
     @ColumnInfo(name = "language")
-    private final String language;
+    val language: String,
+
     @ColumnInfo(name = "country")
-    private final String country;
+    val country: String
 
-    /**
-     * @param id          of the news source, example <b>cnn</b>
-     * @param name        display name of news source, example <b>CNN</b>
-     * @param description a description of the news source
-     * @param url         URL of the homepage
-     * @param category    type of news to expect from this news source, example <b>general</b>
-     * @param language    language that this news source writes in, example <b>en</b>
-     * @param country     country this news source is based in (and primarily writes about), example <b>au</b>
-     */
-    public Source(@NonNull String id, String name, String description, String url, String category, String language, String country) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.url = url;
-        this.category = category;
-        this.language = language;
-        this.country = country;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-}
+)

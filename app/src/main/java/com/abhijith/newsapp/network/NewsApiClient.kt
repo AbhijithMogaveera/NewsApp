@@ -24,15 +24,14 @@ import java.util.concurrent.TimeUnit
 /**
  * A Singleton client class that provides [NewsApi] instance to load network requests
  */
-class NewsApiClient  // Required private constructor
+class NewsApiClient
 private constructor() {
+
     fun getHeadlines(specs: Specification): LiveData<List<Article>> {
+
         val networkArticleLiveData = MutableLiveData<List<Article>>()
-        val networkCall = sNewsApi!!.getHeadlines(
-            specs.category,
-            specs.country
-        )
-        networkCall!!.enqueue(object : Callback<ArticleResponseWrapper?> {
+        val networkCall = sNewsApi.getHeadlines(specs.category, specs.country)
+        networkCall.enqueue(object : Callback<ArticleResponseWrapper?> {
             override fun onResponse(
                 call: Call<ArticleResponseWrapper?>,
                 response: Response<ArticleResponseWrapper?>
@@ -59,12 +58,12 @@ private constructor() {
 
     fun getSources(specs: Specification): LiveData<List<Source>> {
         val networkSourcesLiveData = MutableLiveData<List<Source>>()
-        val networkCall = sNewsApi!!.getSources(
+        val networkCall = sNewsApi.getSources(
             specs.category,
             specs.country,
             null
         )
-        networkCall!!.enqueue(object : Callback<SourceResponseWrapper?> {
+        networkCall.enqueue(object : Callback<SourceResponseWrapper?> {
             override fun onResponse(
                 call: Call<SourceResponseWrapper?>,
                 response: Response<SourceResponseWrapper?>
@@ -88,8 +87,8 @@ private constructor() {
     companion object {
         private const val NEWS_API_URL = "https://newsapi.org/"
         private val LOCK = Any()
-        private var sNewsApi: NewsApi? = null
-        private var sInstance: NewsApiClient? = null
+        private lateinit var sNewsApi: NewsApi
+        private lateinit var sInstance: NewsApiClient
 
         /**
          * Provides instance of [NewsApi]
@@ -98,25 +97,32 @@ private constructor() {
          * @return [NewsApi]
          */
         @JvmStatic
-        fun getInstance(context: Context): NewsApiClient? {
-            if (sInstance == null || sNewsApi == null) {
-                synchronized(LOCK) {
+        fun getInstance(context: Context): NewsApiClient {
 
+            if (!this::sInstance.isInitialized || !this::sNewsApi.isInitialized) {
+                synchronized(LOCK) {
                     // 5 MB of cache
                     val cache = Cache(context.applicationContext.cacheDir, 5 * 1024 * 1024)
 
                     // Used for cache connection
                     val networkInterceptor =
                         Interceptor { chain -> // set max-age and max-stale properties for cache header
-                            val cacheControl = CacheControl.Builder()
-                                .maxAge(1, TimeUnit.HOURS)
-                                .maxStale(3, TimeUnit.DAYS)
-                                .build()
-                            chain.proceed(chain.request())
-                                .newBuilder()
-                                .removeHeader("Pragma")
-                                .header("Cache-Control", cacheControl.toString())
-                                .build()
+                            val cacheControl =
+                                CacheControl.Builder().apply {
+                                    maxAge(1, TimeUnit.HOURS)
+                                    maxStale(3, TimeUnit.DAYS)
+                                }.build()
+
+                            chain
+                                .proceed(chain.request())
+                                .apply {
+                                    return@Interceptor newBuilder()
+                                        .apply {
+                                            removeHeader("Pragma")
+                                            header("Cache-Control", cacheControl.toString())
+                                        }.build()
+                                }
+
                         }
 
                     // For logging
@@ -132,15 +138,18 @@ private constructor() {
                         .build()
 
                     // Configure GSON
-                    val gson = GsonBuilder()
-                        .registerTypeAdapter(Date::class.java, DateDeserializer())
-                        .create()
+                    val gson =
+                        GsonBuilder()
+                            .registerTypeAdapter(Date::class.java, DateDeserializer())
+                            .create()
 
                     // Retrofit Builder
-                    val builder = Retrofit.Builder()
-                        .baseUrl(NEWS_API_URL)
-                        .client(client)
-                        .addConverterFactory(GsonConverterFactory.create(gson))
+                    val builder =
+                        Retrofit.Builder()
+                            .baseUrl(NEWS_API_URL)
+                            .client(client)
+                            .addConverterFactory(GsonConverterFactory.create(gson))
+
                     // Set NewsApi instance
                     sNewsApi = builder.build().create(NewsApi::class.java)
                     sInstance = NewsApiClient()

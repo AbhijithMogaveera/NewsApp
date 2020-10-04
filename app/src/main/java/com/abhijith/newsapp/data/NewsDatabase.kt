@@ -13,30 +13,39 @@ import com.abhijith.newsapp.models.SavedArticle
 import com.abhijith.newsapp.models.Source
 
 @Database(
-    entities = [Article::class, Source::class, SavedArticle::class],
+    entities = [
+        Article::class,
+        Source::class,
+        SavedArticle::class
+    ],
+
     version = 1,
+
     exportSchema = false
 )
 @TypeConverters(
     DatabaseConverters::class
 )
 abstract class NewsDatabase : RoomDatabase() {
-    abstract fun headlinesDao(): HeadlinesDao?
-    abstract fun sourcesDao(): SourcesDao?
-    abstract fun savedDao(): SavedDao?
+    abstract fun headlinesDao(): HeadlinesDao
+    abstract fun sourcesDao(): SourcesDao
+    abstract fun savedDao(): SavedDao
 
     companion object {
         private val LOCK = Any()
         private const val DATABASE_NAME = "news"
-        private var sInstance: NewsDatabase? = null
-        fun getInstance(context: Context): NewsDatabase? {
-            if (sInstance == null) {
+        private lateinit var sInstance: NewsDatabase
+        fun getInstance(context: Context): NewsDatabase {
+            if (!this::sInstance.isInitialized) {
                 synchronized(LOCK) {
-                    sInstance = Room.databaseBuilder(
-                        context.applicationContext,
-                        NewsDatabase::class.java,
-                        DATABASE_NAME
-                    ).build()
+                    sInstance =
+                        Room
+                            .databaseBuilder(
+                                context.applicationContext,
+                                NewsDatabase::class.java,
+                                DATABASE_NAME
+                            )
+                            .build()
                 }
             }
             return sInstance

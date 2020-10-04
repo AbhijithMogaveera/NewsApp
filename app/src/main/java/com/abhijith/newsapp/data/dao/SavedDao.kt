@@ -1,29 +1,28 @@
-package com.abhijith.newsapp.data.dao;
+package com.abhijith.newsapp.data.dao
 
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
-import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
-import androidx.room.Query;
-
-import com.abhijith.newsapp.models.Article;
-import com.abhijith.newsapp.models.SavedArticle;
-
-import java.util.List;
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.abhijith.newsapp.models.Article
+import com.abhijith.newsapp.models.SavedArticle
 
 @Dao
-public interface SavedDao {
+interface SavedDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(SavedArticle article);
+    fun insert(article: SavedArticle)
 
     @Query("SELECT COUNT(news_id) > 0 FROM saved WHERE news_id = :articleId")
-    LiveData<Boolean> isFavourite(int articleId);
+    fun isFavourite(articleId: Int): LiveData<Boolean>
 
     @Query("DELETE FROM saved WHERE news_id=:articleId")
-    void removeSaved(int articleId);
+    fun removeSaved(articleId: Int)
 
-    @Query("SELECT articles.* FROM articles, saved " +
-            "WHERE articles.id == saved.news_id " +
-            "ORDER BY saved.time_saved")
-    LiveData<List<Article>> getAllSaved();
+    @get:Query(
+        "SELECT articles.* FROM articles, saved " +
+                "WHERE articles.id == saved.news_id " +
+                "ORDER BY saved.time_saved"
+    )
+    val allSaved: LiveData<List<Article>>
 }

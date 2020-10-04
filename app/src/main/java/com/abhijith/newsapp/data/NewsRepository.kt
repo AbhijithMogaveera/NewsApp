@@ -16,30 +16,32 @@ import com.abhijith.newsapp.utils.AppExecutors
 import timber.log.Timber
 
 class NewsRepository private constructor(context: Context) {
-    private val newsApiService: NewsApiClient? = NewsApiClient.getInstance(context)
-    private val headlinesDao: HeadlinesDao
-    private val sourcesDao: SourcesDao
-    private val savedDao: SavedDao
-    private val mExecutor: AppExecutors
-    private val networkArticleLiveData: MutableLiveData<List<Article>>
-    private val networkSourceLiveData: MutableLiveData<List<Source>>
+
+    private val newsApiService: NewsApiClient = NewsApiClient.getInstance(context)
+    private val headlinesDao: HeadlinesDao = NewsDatabase.getInstance(context).headlinesDao()
+    private val sourcesDao: SourcesDao = NewsDatabase.getInstance(context).sourcesDao()
+    private val savedDao: SavedDao = NewsDatabase.getInstance(context).savedDao()
+    private val mExecutor: AppExecutors = AppExecutors.instance!!
+    private val networkArticleLiveData: MutableLiveData<List<Article>> = MutableLiveData()
+    private val networkSourceLiveData: MutableLiveData<List<Source>> = MutableLiveData()
+
     fun getHeadlines(specs: Specification): LiveData<List<Article>> {
-        val networkData = newsApiService!!.getHeadlines(specs)
-        networkData.observeForever(object : Observer<List<Article>?> {
-            override fun onChanged(articles: List<Article>?) {
-                if (articles != null) {
-                    networkArticleLiveData.value = articles
-                    networkData.removeObserver(this)
+        val networkData
+                = newsApiService.getHeadlines(specs)
+        networkData
+            .observeForever(object : Observer<List<Article>?> {
+                override fun onChanged(articles: List<Article>?) {
+                    if (articles != null) {
+                        networkArticleLiveData.value = articles
+                        networkData.removeObserver(this)
+                    }
                 }
-            }
-        })
+            })
         return headlinesDao.getArticleByCategory(specs.category!!)
     }
 
-    fun getSources(specs: Specification?): LiveData<List<Source>> {
-        val networkData = newsApiService!!.getSources(
-            specs!!
-        )
+    fun getSources(specs: Specification): LiveData<List<Source>> {
+        val networkData = newsApiService.getSources(specs)
         networkData.observeForever(object : Observer<List<Source>?> {
             override fun onChanged(sources: List<Source>?) {
                 if (sources != null) {
@@ -87,12 +89,6 @@ class NewsRepository private constructor(context: Context) {
 
     // required private constructor for Singleton pattern
     init {
-        headlinesDao = NewsDatabase.getInstance(context)?.headlinesDao()!!
-        sourcesDao = NewsDatabase.getInstance(context)?.sourcesDao()!!
-        savedDao = NewsDatabase.getInstance(context)?.savedDao()!!
-        mExecutor = AppExecutors.instance!!
-        networkArticleLiveData = MutableLiveData()
-        networkSourceLiveData = MutableLiveData()
         networkArticleLiveData.observeForever { articles ->
             if (articles != null) {
                 mExecutor.diskIO.execute { headlinesDao.bulkInsert(articles) }

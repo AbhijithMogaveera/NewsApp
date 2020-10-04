@@ -1,17 +1,18 @@
-package com.abhijith.newsapp.data;
+package com.abhijith.newsapp.data
 
-import androidx.room.TypeConverter;
+import androidx.room.TypeConverter
+import java.sql.Timestamp
 
-import java.sql.Timestamp;
+class DatabaseConverters {
 
-public class DatabaseConverters {
     @TypeConverter
-    public static Timestamp toJavaTimestamp(Long timestamp) {
-        return timestamp == null ? null : new Timestamp(timestamp);
+    fun toJavaTimestamp(timestamp: Long?): Timestamp? {
+        return if (timestamp == null) null else Timestamp(timestamp)
     }
 
     @TypeConverter
-    public static Long toDatabaseTimestamp(Timestamp timestamp) {
-        return timestamp == null ?  new Timestamp(System.currentTimeMillis()).getTime() : timestamp.getTime();
+    fun toDatabaseTimestamp(timestamp: Timestamp?): Long {
+        return timestamp?.time ?: Timestamp(System.currentTimeMillis()).time
     }
+
 }

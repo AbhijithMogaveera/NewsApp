@@ -1,11 +1,13 @@
 package com.abhijith.newsapp.ui.sources
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -23,6 +25,8 @@ import java.util.*
  */
 class SourceFragment : Fragment(), SourceAdapterListener {
     private val sourceAdapter = SourceAdapter(null, this)
+
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,17 +46,19 @@ class SourceFragment : Fragment(), SourceAdapterListener {
     }
 
     private fun setupViewModel() {
-        val viewModel = ViewModelProviders.of(this).get(
-            SourceViewModel::class.java
-        )
+
+        val viewModel = ViewModelProviders.of(this).get(SourceViewModel::class.java)
         val specification = Specification()
         specification.language = Locale.getDefault().language
-        specification.country = "null"
-        viewModel.getSource(specification).observe(this, { sources ->
-            if (sources != null) {
-                sourceAdapter.setSources(sources)
+        specification.country = null
+        viewModel
+            .getSource(specification)
+            .observe(this, { sources ->
+                if (sources != null) {
+                    sourceAdapter.setSources(sources)
+                }
             }
-        })
+            )
     }
 
     override fun onSourceButtonClicked(source: Source) {
