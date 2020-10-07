@@ -6,11 +6,11 @@
 
     <data>
 
-        <import type="com.abhijith.newsapp.utils.BindingUtils" />
+        <import type="com.abhijith.newsapp.ui.utils.BindingUtils" />
 
         <variable
             name="news"
-            type="com.abhijith.newsapp.models.Article" />
+            type="com.abhijith.newsapp.room.models.Article" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +21,7 @@
         android:paddingTop="@dimen/rv_vertical_offset"
         android:paddingEnd="@dimen/rv_horizontal_offset"
         android:paddingBottom="@dimen/rv_vertical_offset"
-        tools:context=".ui.MainActivity">
+        tools:context=".ui.activity.MainActivity">
 
         <TextView
             android:id="@+id/tv_news_title"

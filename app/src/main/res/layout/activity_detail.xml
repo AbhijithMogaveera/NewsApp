@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-        <import type="com.abhijith.newsapp.utils.BindingUtils" />
-
-        <variable
-            name="article"
-            type="com.abhijith.newsapp.models.Article" />
-    </data>
-
     <ScrollView
+        android:id="@+id/sv_news_scroll"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -21,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"
-            tools:context=".ui.news.DetailActivity">
+            tools:context=".ui.activity.DetailActivity">
 
             <View
                 android:layout_width="0dp"
@@ -40,9 +33,7 @@
                 android:foreground="@drawable/news_image_gradient"
                 app:layout_constraintDimensionRatio="h,16:9"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                bind:articleUrl="@{article.url}"
-                bind:urlToImage="@{article.urlToImage}" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/iv_save"
@@ -71,7 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@{BindingUtils.formatDateForDetails(article.publishedAt)}"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
@@ -84,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:paddingBottom="18dp"
-                android:text="@{article.source.name}"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
@@ -97,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:lineSpacingMultiplier="1.1"
-                android:text="@{article.title}"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -113,7 +101,6 @@
                 android:layout_marginTop="32dp"
                 android:alpha="0.6"
                 android:lineSpacingMultiplier="1.3"
-                android:text="@{article.description}"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"
@@ -129,7 +116,6 @@
                 android:layout_marginTop="32dp"
                 android:alpha="0.6"
                 android:lineSpacingMultiplier="1.3"
-                android:text="@{BindingUtils.truncateExtra(article.content)}"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="@id/guideline_right"

@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,9 +22,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.news.DetailActivity" />
+            android:name=".ui.activity.DetailActivity" />
 
-        <receiver android:name=".widget.SavedNewsWidget">
+        <receiver android:name="com.abhijith.newsapp.ui.widget.SavedNewsWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -35,7 +35,7 @@
         </receiver>
 
         <service
-            android:name=".widget.SavedNewsService"
+            android:name="com.abhijith.newsapp.ui.services.SavedNewsService"
             android:exported="false" />
     </application>
 
