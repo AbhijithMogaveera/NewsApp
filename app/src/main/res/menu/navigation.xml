@@ -15,4 +15,5 @@
         android:id="@+id/navigation_sources"
         android:icon="@drawable/ic_sources"
         android:title="@string/title_sources" />
+
 </menu>

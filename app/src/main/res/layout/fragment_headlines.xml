@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:background="@color/colorTextPrimary"
         android:layout_height="match_parent"
+        android:background="@color/colorTextPrimary"
         tools:context=".ui.fragment.HeadlinesFragment">
 
         <androidx.viewpager.widget.ViewPager
@@ -27,6 +26,9 @@
                 app:tabPaddingStart="16dp"
                 app:tabTextAppearance="@style/AppTheme.Headlines.TabTextAppearance"
                 app:tabTextColor="@color/tab_icon_selector" />
+
         </androidx.viewpager.widget.ViewPager>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 </layout>

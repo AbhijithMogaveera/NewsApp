@@ -24,6 +24,7 @@ class HeadlinesFragment : Fragment() {
         NewsApi.Category.technology.name,
         NewsApi.Category.science.name
     )
+
     private val categoryIcons = intArrayOf(
         R.drawable.ic_headlines,
         R.drawable.nav_business,

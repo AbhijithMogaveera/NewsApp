@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">News App</string>
+    <string name="app_name">News</string>
 
     <string name="sample_source">BBC News • 1h</string>
     <string name="sample_title">Why would Putin want to nuke Florida?</string>
@@ -31,4 +31,6 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
     <string name="sample_page">1/5</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

@@ -4,6 +4,8 @@ import android.net.Uri
 import android.text.TextUtils
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import at.favre.lib.dali.Dali
+import com.abhijith.newsapp.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.sql.Timestamp
@@ -36,6 +38,7 @@ object BindingUtils {
     fun getSourceAndTime(sourceName: String, date: Timestamp): String {
         return sourceName + " • " + getElapsedTime(date.time)
     }
+
 
     @JvmStatic
     @BindingAdapter("bind:url", "bind:articleUrl")

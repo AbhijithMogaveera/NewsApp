@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.abhijith.newsapp.R
+import com.abhijith.newsapp.databinding.FragmentSourceBinding
+import com.abhijith.newsapp.databinding.SourceItemBinding
 import com.abhijith.newsapp.ui.adapters.SourceAdapter
 import com.abhijith.newsapp.ui.adapters.SourceAdapter.SourceAdapterListener
 import com.abhijith.newsapp.mvvm.SourceViewModel
@@ -22,25 +24,29 @@ import java.util.*
 
 class SourceFragment : Fragment(), SourceAdapterListener {
     private val sourceAdapter = SourceAdapter(null, this)
-
+    lateinit var binding:FragmentSourceBinding
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v  = inflater.inflate(
-            R.layout.fragment_source, container, false
-        )
+        binding = FragmentSourceBinding.inflate(inflater,container,false)
         setupViewModel()
-        rv_news_posts.adapter = sourceAdapter
+
+        return binding.root
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.rvSources.adapter = sourceAdapter
         if (context != null) {
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             divider.setDrawable(resources.getDrawable(R.drawable.recycler_view_divider))
-            rv_news_posts.addItemDecoration(divider)
+            binding.rvSources.addItemDecoration(divider)
         }
-        return v
     }
-
     private fun setupViewModel() {
 
         val viewModel = ViewModelProviders.of(this).get(SourceViewModel::class.java)

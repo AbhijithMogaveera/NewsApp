@@ -1,25 +1,32 @@
 package com.abhijith.newsapp.ui.activity
 
+//import com.google.firebase.analytics.FirebaseAnalytics
+
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.library.baseAdapters.BuildConfig
+import androidx.drawerlayout.widget.DrawerLayout
 import com.abhijith.newsapp.R
-import com.abhijith.newsapp.mvvm.NewsRepository
 import com.abhijith.newsapp.databinding.ActivityMainBinding
+import com.abhijith.newsapp.mvvm.NewsRepository
+import com.abhijith.newsapp.ui.dialog.OptionsBottomSheet.OptionsBottomSheetListener
 import com.abhijith.newsapp.ui.fragment.HeadlinesFragment
 import com.abhijith.newsapp.ui.fragment.NewsFragment
-import com.abhijith.newsapp.ui.dialog.OptionsBottomSheet.OptionsBottomSheetListener
 import com.abhijith.newsapp.ui.fragment.SourceFragment
 import com.abhijith.newsapp.ui.widget.SavedNewsWidget
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
-//import com.google.firebase.analytics.FirebaseAnalytics
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import timber.log.Timber.DebugTree
+
 
 class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
     private val fragmentManager = supportFragmentManager
@@ -27,20 +34,52 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
     private var headlinesFragment: HeadlinesFragment? = null
     private var sourceFragment: SourceFragment? = null
     private var newsFragment: NewsFragment? = null
-//    private var mFirebaseAnalytics: FirebaseAnalytics? = null
-    private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            val bundle = Bundle()
+
+    //    private var mFirebaseAnalytics: FirebaseAnalytics? = null
+
+    private var snackbar: Snackbar? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
+
+        // Bind data using DataBinding
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        if (savedInstanceState == null) {
+            // Add a default fragment
+            headlinesFragment = HeadlinesFragment.newInstance()
+            fragmentManager.beginTransaction()
+                .add(R.id.fragment_container, headlinesFragment as HeadlinesFragment)
+                .commit()
+        }
+
+        setupToolbar()
+
+        setSupportActionBar(binding.toolbar)
+        //
+
+        val toggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.isDrawerIndicatorEnabled = true
+        toggle.syncState()
+        //
+        nav_view.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_headlines -> {
                     fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, headlinesFragment!!)
                         .commit()
-//                    bundle.putString(
-//                        FirebaseAnalytics.Param.ITEM_CATEGORY,
-//                        getString(R.string.title_headlines)
-//                    )
-                    return@OnNavigationItemSelectedListener true
+                    true
                 }
                 R.id.navigation_saved -> {
                     if (newsFragment == null) {
@@ -49,11 +88,7 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, newsFragment!!)
                         .commit()
-//                    bundle.putString(
-//                        FirebaseAnalytics.Param.ITEM_CATEGORY,
-//                        getString(R.string.title_saved)
-//                    )
-                    return@OnNavigationItemSelectedListener true
+                    true
                 }
                 R.id.navigation_sources -> {
                     if (sourceFragment == null) {
@@ -62,39 +97,17 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, sourceFragment!!)
                         .commit()
-//                    bundle.putString(
-//                        FirebaseAnalytics.Param.ITEM_CATEGORY,
-//                        getString(R.string.title_sources)
-//                    )
-                    return@OnNavigationItemSelectedListener true
+                    true
+                }
+                else -> {
+                    false
                 }
             }
-//            mFirebaseAnalytics!!.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-            false
-        }
-    private var snackbar: Snackbar? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (BuildConfig.DEBUG) {
-            Timber.plant(DebugTree())
         }
 
-        // Bind data using DataBinding
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        // Obtain the FirebaseAnalytics instance.
-//        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-        if (savedInstanceState == null) {
-            // Add a default fragment
-            headlinesFragment = HeadlinesFragment.newInstance()
-            fragmentManager.beginTransaction()
-                .add(R.id.fragment_container, headlinesFragment as HeadlinesFragment)
-                .commit()
-        }
-        setupToolbar()
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val saved = NewsRepository.getInstance(this).saved
+
         saved.observe(this,
             { articles ->
                 if (articles != null) {
@@ -104,7 +117,7 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
                             SavedNewsWidget::class.java
                         )
                     )
-                    if (articles.size == 0) {
+                    if (articles.isEmpty()) {
                         SavedNewsWidget.updateNewsWidgets(
                             applicationContext,
                             appWidgetManager,
@@ -126,13 +139,13 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.title = getString(R.string.app_name)
-            //Remove trailing space from toolbar
-            binding.toolbar.setContentInsetsAbsolute(10, 10)
-        }
+//        setSupportActionBar(binding.toolbar)
+//        val actionBar = supportActionBar
+//        if (actionBar != null) {
+//            actionBar.title = getString(R.string.app_name)
+//            //Remove trailing space from toolbar
+//            binding.toolbar.setContentInsetsAbsolute(10, 10)
+//        }
     }
 
     override fun onSaveToggle(text: String?) {
@@ -160,5 +173,13 @@ class MainActivity : AppCompatActivity(), OptionsBottomSheetListener {
             snackbar!!.setText(text)
         }
         snackbar!!.show()
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

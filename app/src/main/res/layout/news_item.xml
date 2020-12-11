@@ -15,7 +15,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="155dp"
         android:background="?selectableItemBackground"
         android:paddingStart="@dimen/rv_horizontal_offset"
         android:paddingTop="@dimen/rv_vertical_offset"
@@ -36,7 +36,8 @@
             app:layout_constraintEnd_toStartOf="@id/iv_options"
             app:layout_constraintStart_toEndOf="@id/iv_news_image"
             app:layout_constraintTop_toTopOf="@id/iv_news_image"
-            tools:text="@string/sample_title_long" />
+            tools:text="@string/sample_title_long"
+            android:layout_marginLeft="8dp" />
 
         <ImageView
             android:id="@+id/iv_news_image"
@@ -70,6 +71,7 @@
             android:padding="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_news_title"
-            app:srcCompat="@drawable/ic_more_options" />
+            app:srcCompat="@drawable/ic_more_options"
+            tools:ignore="VectorDrawableCompat" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

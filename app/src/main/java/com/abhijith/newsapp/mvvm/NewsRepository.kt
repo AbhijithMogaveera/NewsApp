@@ -106,13 +106,12 @@ private constructor(context: Context) {
     }
 
     companion object {
-        private val LOCK = Any()
         private lateinit var sInstance: NewsRepository
 
         @Synchronized
         fun getInstance(context: Context) =
             if (!this::sInstance.isInitialized) {
-                synchronized(LOCK) {
+                synchronized(this) {
                     if (!this::sInstance.isInitialized) {
                         sInstance = NewsRepository(context)
                         sInstance
